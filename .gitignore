@@ -1,0 +1,9 @@
+# everything
+* 
+
+# but
+!.gitignore
+!.vimrc
+!.zshrc
+!.vimsyntax.vim
+!delete_zcompdump.sh
