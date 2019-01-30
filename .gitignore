@@ -3,7 +3,8 @@
 
 # but
 !.gitignore
+!.gitignore_basic
 !.vimrc
 !.zshrc
 !.vimsyntax.vim
-!delete_zcompdump.sh
+!delete_zcomp.sh
