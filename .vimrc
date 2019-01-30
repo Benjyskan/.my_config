@@ -3,16 +3,32 @@ set nu
 set clipboard=unnamed "for copypasta //doesn4t work :(
 set colorcolumn=80
 highlight ColorColumn ctermbg=17
+highlight CursorLine cterm=none guibg=#303000 ctermbg=235
 set timeout timeoutlen=5000 ttimeoutlen=100 "<O> is now instant
 
 "those commands needs autocmd to be effective at lauch
-autocmd Vimenter * set comments=sl:/*,mb:**,elx:*/
-autocmd Bufenter * set comments=sl:/*,mb:**,elx:*/ "Bufenter is for split
-autocmd Vimenter * source ~/.vimsyntax.vim
-autocmd Bufenter * source ~/.vimsyntax.vim
+"au = autocmd
 
-"automatically resize when split
-autocmd Bufenter * vertical resize 84
+" auto source my syntax file
+augroup Sourcegroup
+	autocmd Vimenter,Bufenter * source ~/.vimsyntax.vim
+augroup END
+
+augroup Commentgroup
+	"this line protect from multi including
+	au!	
+	au VimEnter,WinEnter,BufWinEnter * set comments=sl:/*,mb:**,elx:*/
+augroup END
+
+augroup CursorLine
+	au!
+	au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+	au WinLeave * setlocal nocursorline
+augroup END
+
+"autocmd Bufenter * vertical resize 84 "automatically resize when split
+
+" <f1> already maped to 42Header
 
 " press f2 to toggle relative nu
 map <f2> :set rnu! <CR>
