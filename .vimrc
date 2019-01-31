@@ -11,6 +11,7 @@ set timeout timeoutlen=5000 ttimeoutlen=100 "<O> is now instant
 
 " auto source my syntax file
 augroup Sourcegroup
+	au!
 	autocmd Vimenter,Bufenter * source ~/.vimsyntax.vim
 augroup END
 
@@ -44,4 +45,14 @@ if has("autocmd")
 endif
 
 "while in insert mode, press k then j to <Esc>
-inoremap kj <Esc>
+"inoremap kj <Esc> nul
+
+" <Alt-j> move current line down
+no ∆ ddp
+ino ∆ <Esc> ddpi
+" <Alt-k> move current line up
+no ˚ ddkP
+ino ˚ <Esc> ddkpi
+
+"fold brackets
+no \\ zf%
