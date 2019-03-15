@@ -2,9 +2,23 @@
 * 
 
 # but
+!tmp_gitignore
 !.gitignore
 !.gitignore_basic
 !.vimrc
 !.zshrc
 !.vimsyntax.vim
 !delete_zcomp.sh
+
+#marche pas...
+!templates/
+!templates/project_template/
+!templates/project_template/srcs/
+!templates/project_template/srcs/main.c
+!templates/project_template/libft/
+!templates/project_template/libft/**
+!templates/project_template/script/
+!templates/project_template/script/**
+#!templates/project_template/script/42header_add.keys
+#!templates/project_template/script/42header_c_rm.sh
+!templates/project_template/Makefile

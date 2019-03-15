@@ -1,6 +1,6 @@
 syntax on "set colors
 set nu
-set clipboard=unnamed "for copypasta //doesn4t work :(
+"set clipboard+=unnamed "for copypasta //doesn4t work :(
 set colorcolumn=80
 highlight ColorColumn ctermbg=17
 highlight CursorLine cterm=none guibg=#303000 ctermbg=235
@@ -53,6 +53,22 @@ ino ∆ <Esc> ddpi
 " <Alt-k> move current line up
 no ˚ ddkP
 ino ˚ <Esc> ddkpi
+" <Alt-l> move all current line to the right
+no ¬ V>
+" <Alt-h> move all current line to the right
+no ˙ V<
 
-"fold brackets
+"fold brackets "i could find a better shortcut
 no \\ zf%
+
+"this prevent // to recomment the next newline
+"https://vi.stackexchange.com/questions/15444/remove-automatic-comment-leader?rq=1
+inoremap <silent><expr> <bs> getline('.') =~# '^//\s*$' ? "<c-u>" : "<bs>"
+
+"this redirect swp files into ~/.vim/swp_files
+set directory^=$HOME/.vim/swp_files//
+
+function My_func_test() "tejme plz
+	:Stdheader
+	:wq
+endfunction

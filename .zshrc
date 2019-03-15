@@ -1,3 +1,5 @@
+export ZSH_DISABLE_COMPFIX=true
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
@@ -96,7 +98,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias git push='git push all'
+#alias git push='git push all'
 alias 42FileChecker='bash ~/42FileChecker/42FileChecker.sh'
 
 # Load Homebrew config script
@@ -104,3 +106,9 @@ source $HOME/.brewconfig.zsh
 
 # Vagrant config
 export VAGRANT_HOME=/Volumes/Storage/goinfre/penzo/vagrant
+
+# does not work...
+#zstyle ':completion:*' ignored-patterns '*.o'
+
+# emulate VIM shortcut to ZSH commandline
+bindkey -v
