@@ -110,5 +110,5 @@ export VAGRANT_HOME=/Volumes/Storage/goinfre/penzo/vagrant
 # does not work...
 #zstyle ':completion:*' ignored-patterns '*.o'
 
-# emulate VIM shortcut to ZSH commandline
-bindkey -v
+# emulate VIM shortcut to ZSH commandline #chiant pour naviguer dans l'historique
+#bindkey -v

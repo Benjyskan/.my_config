@@ -68,7 +68,7 @@ inoremap <silent><expr> <bs> getline('.') =~# '^//\s*$' ? "<c-u>" : "<bs>"
 "this redirect swp files into ~/.vim/swp_files
 set directory^=$HOME/.vim/swp_files//
 
-function My_func_test() "tejme plz
-	:Stdheader
-	:wq
-endfunction
+"function My_func_test() "tejme plz
+"	:Stdheader
+"	:wq
+"endfunction
