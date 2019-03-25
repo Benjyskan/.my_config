@@ -72,3 +72,9 @@ set directory^=$HOME/.vim/swp_files//
 "	:Stdheader
 "	:wq
 "endfunction
+
+"press gb to naviguate between buffers (Number or name(tab))
+nnoremap gb :ls<CR>:b<Space>
+
+set path+=**
+set wildmenu

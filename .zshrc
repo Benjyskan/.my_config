@@ -100,6 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #alias git push='git push all'
 alias 42FileChecker='bash ~/42FileChecker/42FileChecker.sh'
+alias maked='make d'
 
 # Load Homebrew config script
 source $HOME/.brewconfig.zsh
