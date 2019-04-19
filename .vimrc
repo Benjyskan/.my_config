@@ -6,7 +6,7 @@
 "    By: penzo <marvin@42.fr>                       +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2019/03/25 17:57:53 by penzo             #+#    #+#              "
-"    Updated: 2019/03/25 20:58:04 by penzo            ###   ########.fr        "
+"    Updated: 2019/04/14 19:47:11 by penzo            ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -31,8 +31,8 @@ augroup END
 
 "create 42 comments style naturaly
 augroup Commentgroup
-	"this line protect from multi including
-	au!	
+"this line protect from multi including
+	au!
 	au VimEnter,WinEnter,BufWinEnter * set comments=sl:/*,mb:**,elx:*/
 augroup END
 
@@ -42,6 +42,13 @@ augroup CursorLine
 	au WinLeave * setlocal nocursorline
 augroup END
 
+" Uncomment the following to have Vim jump to the last position when
+" reopening a file
+if has("autocmd")
+	au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+				\| exe "normal! g'\"" | endif
+endif
+
 "autocmd Bufenter * vertical resize 84 "automatically resize when split
 
 " <f1> already maped to 42Header
@@ -49,15 +56,7 @@ augroup END
 " press f2 to toggle relative nu
 map <f2> :set rnu! <CR>
 
-"press <F3> to open bracket for a function.
-map <f3> A<cr>{<cr>}<Esc>O
-
-" Uncomment the following to have Vim jump to the last position when
-" reopening a file
-if has("autocmd")
-	au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-				\| exe "normal! g'\"" | endif
-endif
+map <f5> f)i, char** env<Esc>
 
 " <Alt-j> move current line down
 no ∆ ddp
@@ -69,8 +68,16 @@ no ¬ V>
 " <Alt-h> move all current line to the right
 no ˙ V<
 
+"######FOLDING
+set nofoldenable "will not autofold when opening a file
+set	foldmethod=indent
+set foldnestmax=1
+
+
 "fold brackets "i could find a better shortcut
-no \\ zf%
+"no \\ zf%
+"set foldmethod=marker
+"set foldmarker=/*,*/
 
 "Map Y to yank until end of line
 no Y y$
@@ -120,3 +127,25 @@ set hidden		"buffer thing
 nnoremap gn :bn<CR>
 nnoremap gp :bp<CR>
 nnoremap gd :bd<cr>
+
+set tw=80
+" fill rest of linLe with characters
+function! FillLine( str )
+	" set tw to the desired total length
+	let tw = &textwidth
+	if tw==0 | let tw = 80 | endif
+	" strip trailing spaces first
+	.s/[[:space:]]*$//
+	" calculate total number of 'str's to insert
+	let reps = (tw - col("$")) / len(a:str)
+	" insert them, if there's room, removing trailing spaces (though forcing
+	" there to be one)
+	if reps > 0
+		.s/$/\=(' '.repeat(a:str, reps))/
+	endif
+endfunction
+
+map <F3> :call FillLine( '-' )<CR>
+
+map <F4> A//<ESC>20A<TAB><ESC>d80\|a
+":set ve=all<CR> :set ve=block<CR>
