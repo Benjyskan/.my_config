@@ -101,6 +101,8 @@ source $ZSH/oh-my-zsh.sh
 #alias git push='git push all'
 alias 42FileChecker='bash ~/42FileChecker/42FileChecker.sh'
 alias maked='make d'
+alias fix='vim `git diff --name-only | uniq`'
+alias norm='norminette'
 
 # Load Homebrew config script
 source $HOME/.brewconfig.zsh

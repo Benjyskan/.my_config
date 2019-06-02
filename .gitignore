@@ -9,6 +9,7 @@
 !.zshrc
 !.vimsyntax.vim
 !delete_zcomp.sh
+!.config/fish/*
 
 #les templates
 !templates/

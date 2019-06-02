@@ -6,7 +6,7 @@
 "    By: penzo <marvin@42.fr>                       +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2019/03/25 17:57:53 by penzo             #+#    #+#              "
-"    Updated: 2019/04/14 19:47:11 by penzo            ###   ########.fr        "
+"    Updated: 2019/05/25 19:17:50 by penzo            ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -72,6 +72,11 @@ no ˙ V<
 set nofoldenable "will not autofold when opening a file
 set	foldmethod=indent
 set foldnestmax=1
+
+command WQ wq
+command Wq wq
+command W w
+command Q q
 
 
 "fold brackets "i could find a better shortcut
