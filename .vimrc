@@ -6,7 +6,7 @@
 "    By: penzo <marvin@42.fr>                       +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2019/03/25 17:57:53 by penzo             #+#    #+#              "
-"    Updated: 2019/05/25 19:17:50 by penzo            ###   ########.fr        "
+"    Updated: 2019/06/05 14:06:29 by penzo            ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -55,8 +55,6 @@ endif
 
 " press f2 to toggle relative nu
 map <f2> :set rnu! <CR>
-
-map <f5> f)i, char** env<Esc>
 
 " <Alt-j> move current line down
 no ∆ ddp
@@ -110,7 +108,7 @@ set ignorecase	"no 'casesensitive' research
 set smartcase	"unless pattern contain Maj
 
 set nocompatible	"ignore old Vi
-set	wrap
+set	wrap			"this wrap around on big line ??
 
 set splitright	"More natural spliting
 set sb			"More natural spliting
@@ -133,8 +131,12 @@ nnoremap gn :bn<CR>
 nnoremap gp :bp<CR>
 nnoremap gd :bd<cr>
 
+"show invisible character
+map <f3> :set list! <CR>
+set listchars=tab:→\ ,space:·,nbsp:␣,trail:•,eol:¶,precedes:«,extends:»
+
 set tw=80
-" fill rest of linLe with characters
+" fill rest of linLe with characters----------------
 function! FillLine( str )
 	" set tw to the desired total length
 	let tw = &textwidth
@@ -150,7 +152,5 @@ function! FillLine( str )
 	endif
 endfunction
 
-map <F3> :call FillLine( '-' )<CR>
-
-map <F4> A//<ESC>20A<TAB><ESC>d80\|a
-":set ve=all<CR> :set ve=block<CR>
+map <F4> :call FillLine( '-' )<CR>
+" ------------------------------------------------
