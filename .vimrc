@@ -6,7 +6,7 @@
 "    By: penzo <marvin@42.fr>                       +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2019/03/25 17:57:53 by penzo             #+#    #+#              "
-"    Updated: 2019/06/05 14:06:29 by penzo            ###   ########.fr        "
+"    Updated: 2019/06/16 19:37:06 by penzo            ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -71,10 +71,10 @@ set nofoldenable "will not autofold when opening a file
 set	foldmethod=indent
 set foldnestmax=1
 
-command WQ wq
-command Wq wq
-command W w
-command Q q
+command! WQ wq
+command! Wq wq
+command! W w
+command! Q q
 
 
 "fold brackets "i could find a better shortcut
@@ -119,7 +119,7 @@ set showmatch	"show matching parentheses
 "set scrolloff=8		"keep 8 lines visible C'est bof
 
 "Buffer and Split
-nnoremap <C-c> :bp\|bd #<CR>	"<Ctrl-c> to close buffer without closing split
+nnoremap <C-c> :bp\|bd #<CR>	"<Ctrl-c> to close buffer without closing split" better use 'gd' macro
 nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
@@ -129,7 +129,7 @@ set hidden		"buffer thing
 
 nnoremap gn :bn<CR>
 nnoremap gp :bp<CR>
-nnoremap gd :bd<cr>
+"nnoremap gd :bd<cr>
 
 "show invisible character
 map <f3> :set list! <CR>
@@ -154,3 +154,97 @@ endfunction
 
 map <F4> :call FillLine( '-' )<CR>
 " ------------------------------------------------
+"nnoremap <Leader>b :call DeleteCurBufferNotCloseWindow()<CR>
+nnoremap gd :call DeleteCurBufferNotCloseWindow()<CR>
+
+func! DeleteCurBufferNotCloseWindow() abort
+	if &modified
+		echohl ErrorMsg
+		echom "E89: no write since last change"
+		echohl None
+	elseif winnr('$') == 1
+		bd
+	else  " multiple window
+		let oldbuf = bufnr('%')
+		let oldwin = winnr()
+		while 1   " all windows that display oldbuf will remain open
+			if buflisted(bufnr('#'))
+				b#
+			else
+				bn
+				let curbuf = bufnr('%')
+				if curbuf == oldbuf
+					enew    " oldbuf is the only buffer, create one
+				endif
+			endif
+			let win = bufwinnr(oldbuf)
+			if win == -1
+				break
+			else        " there are other window that display oldbuf
+				exec win 'wincmd w'
+			endif
+		endwhile
+		" delete oldbuf and restore window to oldwin
+		exec oldbuf 'bd'
+		exec oldwin 'wincmd w'
+	endif
+endfunc
+let g:TabExplorer = {}
+
+"---------------Multi buf list ?-----------------------------
+nnoremap gh :TabExplorer<CR>
+
+func! StoreBufTab()
+	if !has_key(g:TabExplorer, tabpagenr())
+		let  g:TabExplorer[tabpagenr()] = []
+	endif
+
+	if index(g:TabExplorer[tabpagenr()], bufname("%")) == -1 && bufname("%") != ""
+		call add (g:TabExplorer[tabpagenr()],bufname("%"))
+	endif
+endfunc
+
+func! DisplayTabExplorer()
+	4split
+	enew
+	call append(".",g:TabExplorer[tabpagenr()])
+	echo 'c nul ouech'
+endfunc
+
+au BufEnter * call StoreBufTab()
+
+command! TabExplorer call DisplayTabExplorer()
+"---------------Multi buf list ? 2 --------------------------
+nnoremap gj :call WindowBufManagerNext()<CR>
+
+if !exists("g:WindowBufManager") 
+	let g:WindowBufManager= {}
+endif
+
+function! StoreBufTab()
+	if !has_key(g:WindowBufManager, tabpagenr())
+		let  g:WindowBufManager[tabpagenr()] = []
+	endif
+
+	" add the new buffer to our explorer
+	if index(g:WindowBufManager[tabpagenr()], bufname("%")) == -1 && bufname("%") != ""
+		call add (g:WindowBufManager[tabpagenr()],bufname("%"))
+	endif
+endfunction
+
+function! WindowBufManagerNext() 
+	" find the next index of the buffer
+	let s = index(g:WindowBufManager[tabpagenr()], bufname("%"))
+	if (s!= -1)
+		let s = (s +1) % len(g:WindowBufManager[tabpagenr()])
+		execute 'b ' . g:WindowBufManager[tabpagenr()][s]
+	endif
+endfunction
+
+augroup WindowBufManagerGroup
+	autocmd! BufEnter * call StoreBufTab()
+augroup END
+
+"---------------Multi buf list ? 2 --------------------------
+nnoremap gl :args<CR>:b 
+nnoremap 0dd iAu DD, j’la passe, la détaille, la pé-cou, la vi-sser, des regrets d’vant ton bébé<Esc>
