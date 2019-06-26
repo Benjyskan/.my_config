@@ -6,7 +6,7 @@
 "    By: penzo <marvin@42.fr>                       +#+  +:+       +#+         "
 "                                                 +#+#+#+#+#+   +#+            "
 "    Created: 2019/03/25 17:57:53 by penzo             #+#    #+#              "
-"    Updated: 2019/06/16 19:37:06 by penzo            ###   ########.fr        "
+"    Updated: 2019/06/18 17:43:40 by penzo            ###   ########.fr        "
 "                                                                              "
 " **************************************************************************** "
 
@@ -16,6 +16,9 @@ set nu					"display lines number
 set colorcolumn=80		"display Norm column
 highlight ColorColumn ctermbg=17
 highlight CursorLine cterm=none guibg=#303000 ctermbg=235
+
+"source cscope plugins
+source ~/.vim/plugins/cscope_maps.vim
 
 "<O> is now instant
 set timeout timeoutlen=5000 ttimeoutlen=100
@@ -57,14 +60,27 @@ endif
 map <f2> :set rnu! <CR>
 
 " <Alt-j> move current line down
-no ∆ ddp
 " <Alt-k> move current line up
-no ˚ ddkP
-ino ˚ <Esc> ddkPi
 " <Alt-l> move all current line to the right
-no ¬ V>
 " <Alt-h> move all current line to the right
+ino ˙ <Esc>V<i
+ino ¬ <Esc>V>i
+ino ∆ ddp
+ino ˚ <Esc> ddkPi
+no ˚ ddkP
+no ¬ V>
 no ˙ V<
+
+"Map Y to yank until end of line
+
+no Y y$
+
+"Map U to reverse undo
+map U <C-r>
+
+"press gb to naviguate between buffers (Number or name(tab))
+nnoremap gb :ls<CR>:b<Space>
+nnoremap go :find 
 
 "######FOLDING
 set nofoldenable "will not autofold when opening a file
@@ -82,12 +98,6 @@ command! Q q
 "set foldmethod=marker
 "set foldmarker=/*,*/
 
-"Map Y to yank until end of line
-no Y y$
-
-"Map U to reverse undo
-map U <C-r>
-
 "this prevent // to recomment the next newline
 "https://vi.stackexchange.com/questions/15444/remove-automatic-comment-leader?rq=1
 inoremap <silent><expr> <bs> getline('.') =~# '^//\s*$' ? "<c-u>" : "<bs>"
@@ -95,11 +105,12 @@ inoremap <silent><expr> <bs> getline('.') =~# '^//\s*$' ? "<c-u>" : "<bs>"
 "this redirect swp files into ~/.vim/swp_files
 set directory^=$HOME/.vim/swp_files//
 
-"press gb to naviguate between buffers (Number or name(tab))
-nnoremap gb :ls<CR>:b<Space>
-
 "autocompletion options
 set path+=**
+"test for 'find' to ignore certain files
+set wildignore+=*.d
+set wildignore+=*.o
+
 set wildmenu
 "set wildmode=list:full
 set wildchar=<Tab>
@@ -115,6 +126,13 @@ set sb			"More natural spliting
 set showcmd		"show command in status bar
 set showmatch	"show matching parentheses
 
+"ctags protection
+set tags=./tags;
+let g:easytags_dynamic_files = 1
+let g:easytags_async = 0
+let g:easytags_auto_highlight = 0
+let g:easytags_include_members = 1
+
 " SCROLLING
 "set scrolloff=8		"keep 8 lines visible C'est bof
 
@@ -126,6 +144,8 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 set hidden		"buffer thing
+
+"set title titlestring=		"setup for autoswap plugin
 
 nnoremap gn :bn<CR>
 nnoremap gp :bp<CR>
@@ -155,96 +175,41 @@ endfunction
 map <F4> :call FillLine( '-' )<CR>
 " ------------------------------------------------
 "nnoremap <Leader>b :call DeleteCurBufferNotCloseWindow()<CR>
-nnoremap gd :call DeleteCurBufferNotCloseWindow()<CR>
-
-func! DeleteCurBufferNotCloseWindow() abort
-	if &modified
-		echohl ErrorMsg
-		echom "E89: no write since last change"
-		echohl None
-	elseif winnr('$') == 1
-		bd
-	else  " multiple window
-		let oldbuf = bufnr('%')
-		let oldwin = winnr()
-		while 1   " all windows that display oldbuf will remain open
-			if buflisted(bufnr('#'))
-				b#
-			else
-				bn
-				let curbuf = bufnr('%')
-				if curbuf == oldbuf
-					enew    " oldbuf is the only buffer, create one
-				endif
-			endif
-			let win = bufwinnr(oldbuf)
-			if win == -1
-				break
-			else        " there are other window that display oldbuf
-				exec win 'wincmd w'
-			endif
-		endwhile
-		" delete oldbuf and restore window to oldwin
-		exec oldbuf 'bd'
-		exec oldwin 'wincmd w'
-	endif
-endfunc
-let g:TabExplorer = {}
-
-"---------------Multi buf list ?-----------------------------
-nnoremap gh :TabExplorer<CR>
-
-func! StoreBufTab()
-	if !has_key(g:TabExplorer, tabpagenr())
-		let  g:TabExplorer[tabpagenr()] = []
-	endif
-
-	if index(g:TabExplorer[tabpagenr()], bufname("%")) == -1 && bufname("%") != ""
-		call add (g:TabExplorer[tabpagenr()],bufname("%"))
-	endif
-endfunc
-
-func! DisplayTabExplorer()
-	4split
-	enew
-	call append(".",g:TabExplorer[tabpagenr()])
-	echo 'c nul ouech'
-endfunc
-
-au BufEnter * call StoreBufTab()
-
-command! TabExplorer call DisplayTabExplorer()
-"---------------Multi buf list ? 2 --------------------------
-nnoremap gj :call WindowBufManagerNext()<CR>
-
-if !exists("g:WindowBufManager") 
-	let g:WindowBufManager= {}
-endif
-
-function! StoreBufTab()
-	if !has_key(g:WindowBufManager, tabpagenr())
-		let  g:WindowBufManager[tabpagenr()] = []
-	endif
-
-	" add the new buffer to our explorer
-	if index(g:WindowBufManager[tabpagenr()], bufname("%")) == -1 && bufname("%") != ""
-		call add (g:WindowBufManager[tabpagenr()],bufname("%"))
-	endif
-endfunction
-
-function! WindowBufManagerNext() 
-	" find the next index of the buffer
-	let s = index(g:WindowBufManager[tabpagenr()], bufname("%"))
-	if (s!= -1)
-		let s = (s +1) % len(g:WindowBufManager[tabpagenr()])
-		execute 'b ' . g:WindowBufManager[tabpagenr()][s]
-	endif
-endfunction
-
-augroup WindowBufManagerGroup
-	autocmd! BufEnter * call StoreBufTab()
-augroup END
+"nnoremap gd :call DeleteCurBufferNotCloseWindow()<CR>
+"
+"func! DeleteCurBufferNotCloseWindow() abort
+"	if &modified
+"		echohl ErrorMsg
+"		echom "E89: no write since last change"
+"		echohl None
+"	elseif winnr('$') == 1
+"		bd
+"	else  " multiple window
+"		let oldbuf = bufnr('%')
+"		let oldwin = winnr()
+"		while 1   " all windows that display oldbuf will remain open
+"			if buflisted(bufnr('#'))
+"				b#
+"			else
+"				bn
+"				let curbuf = bufnr('%')
+"				if curbuf == oldbuf
+"					enew    " oldbuf is the only buffer, create one
+"				endif
+"			endif
+"			let win = bufwinnr(oldbuf)
+"			if win == -1
+"				break
+"			else        " there are other window that display oldbuf
+"				exec win 'wincmd w'
+"			endif
+"		endwhile
+"		" delete oldbuf and restore window to oldwin
+"		exec oldbuf 'bd'
+"		exec oldwin 'wincmd w'
+"	endif
+"endfunc
+"let g:TabExplorer = {}
 
 "---------------Multi buf list ? 2 --------------------------
 nnoremap gl :args<CR>:b 
-nnoremap 0dd iAu DD, j’la passe, la détaille, la pé-cou, la vi-sser, des regrets d’vant ton bébé<Esc>

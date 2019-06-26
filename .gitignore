@@ -10,6 +10,8 @@
 !.vimsyntax.vim
 !delete_zcomp.sh
 !.config/fish/*
+!script_shell/
+!script_shell/**
 
 #les templates
 !templates/
